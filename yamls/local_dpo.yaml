@@ -12,6 +12,9 @@ model:
 loggers:
   mlflow:
     experiment_name: brandon_dpo_test
+  wandb:
+    project: mindcraft-dpo
+    name: local-llama8b-dpo
 
 callbacks:
   dpo: {}
@@ -59,10 +62,10 @@ fsdp_config:
   sharding_strategy: FULL_SHARD
   activation_cpu_offload: false
 
-max_seq_len: 2048
+max_seq_len: 4000
 save_folder: /tmp/dpo_model    # TODO: update for a proper save path
 dist_timeout: 600
-max_duration: 1ep
+max_duration: 10ep
 progress_bar: false
 
 train_loader:
