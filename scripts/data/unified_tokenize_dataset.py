@@ -81,6 +81,19 @@ class UnifiedTokenizedDataset(IterableDataset):
                     yield result
             elif self.dataset_type == 'classifier':
                 yield self._process_classifier_sample(sample)
+    
+    def clean_and_fix_conversation(self, messages):
+        new_messages = []
+        for message in messages:
+            new_message = message
+            if message['content'] is None or message['role'] is None:
+                continue 
+            if message['value'] is None:
+                new_message['value'] = message['content']
+            if not 'user' in message.keys() or message['user'] is None: 
+                new_message['user'] = message['role']
+            new_messages.append(message)
+        return new_messages
 
     def _process_preference_sample(self, sample: Any):
         """Process a preference sample.
@@ -88,8 +101,8 @@ class UnifiedTokenizedDataset(IterableDataset):
         Args:
             sample (Any): a sample from the dataset
         """
-        chosen_messages = sample['chosen']
-        rejected_messages = sample['rejected']
+        chosen_messages = self.clean_and_fix_conversation(sample['chosen'])
+        rejected_messages = self.clean_and_fix_conversation(sample['rejected'])
 
         curr_chosen = self.tokenizer.apply_chat_template(
             chosen_messages,
@@ -302,7 +315,7 @@ def main(
             for sample in dataset:
                 num_written += 1
                 out.write(sample)
-
+        print(f'Finished writing {num_written} samples')
         log.info(f'Finished writing {num_written} samples')
     log.info(f'Dataset has: {num_written} samples')
 
