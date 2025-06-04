@@ -8,6 +8,12 @@ scheduling:
   resumable: true
   preemptible: true
 command: |-
+  git clone https://github.com/mosaicml/llm-foundry.git
+  git checkout tags/v0.20.0
+  cd llm-foundry
+  pip install -e ".[gpu]"  # or `pip install -e .` if no NVIDIA GPU.
+
+  cd ..
   git clone https://github.com/icwhite/compose-rl.git
   cd compose-rl
   pip install -e .[gpu]
@@ -17,16 +23,8 @@ command: |-
   --local_dir pref_data \
   --dataset_type preference \
   --tokenizer_name meta-llama/Llama-3.1-8B-Instruct \
-  --split train
-  --max_length 8000
-
-  cd ..
-  cd ..
-  git clone https://github.com/mosaicml/llm-foundry.git
-  git checkout tags/v0.20.0
-  cd llm-foundry
-  pip install -e ".[gpu]"  # or `pip install -e .` if no NVIDIA GPU.
-
+  --split train \
+  --max_length 1000
 
   cd ..
 

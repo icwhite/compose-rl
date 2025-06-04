@@ -62,7 +62,7 @@ fsdp_config:
   sharding_strategy: FULL_SHARD
   activation_cpu_offload: false
 
-max_seq_len: 2000
+max_seq_len: 1000
 save_folder: /models/dpo_model    # TODO: update for a proper save path
 dist_timeout: 600
 max_duration: 10ep
