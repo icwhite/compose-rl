@@ -7,7 +7,7 @@ model:
   pretrained: true
   use_auth_token: true
   use_flash_attention_2: true
-  pretrained_model_name_or_path: izzcw/filtered_crafting_train_data
+  pretrained_model_name_or_path: izzcw/llama_3.1_large_crafting_sft_success
 
 loggers:
   mlflow:

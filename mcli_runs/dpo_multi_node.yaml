@@ -30,7 +30,7 @@ command: |-
 
   composer llm-foundry/scripts/train/train.py \
   compose-rl/yamls/local_dpo.yaml \
-  train_loader.dataset.local=/compose-rl/scripts/pref_data/ \
+  train_loader.dataset.local=/compose-rl/pref_data/ \
   train_loader.dataset.split=train
 
   # install aws cli
