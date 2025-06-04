@@ -1,0 +1,40 @@
+name: dpo-single-node-train
+image: mosaicml/llm-foundry:2.5.1_cu124-latest
+compute:
+    gpus: 8
+    cluster: r15z10p1
+scheduling:
+  priority: lowest
+  resumable: true
+  preemptible: true
+command: |-
+  git clone https://github.com/mosaicml/llm-foundry.git
+  git checkout tags/v0.20.0
+  cd llm-foundry
+  pip install -e ".[gpu]"  # or `pip install -e .` if no NVIDIA GPU.
+
+  cd ..
+  git clone https://github.com/icwhite/compose-rl.git
+  cd compose-rl
+  pip install -e .[gpu]
+  python3 -m spacy download en_core_web_sm
+
+  python scripts/data/unified_tokenize_dataset.py --dataset_name izzcw/trajectory_crafting_dpo_pairs \
+  --local_dir pref_data \
+  --dataset_type preference \
+  --tokenizer_name meta-llama/Llama-3.1-8B-Instruct \
+  --split train \
+  --max_length 8000
+
+  cd ..
+
+  composer llm-foundry/scripts/train/train.py \
+    compose-rl/yamls/local_dpo_8k_context.yaml \
+    train_loader.dataset.local=/compose-rl/pref_data/ \
+    train_loader.dataset.split=train
+
+  # install aws cli
+  pip install awscli
+  aws s3 cp /models/dpo_model s3://izzy/models/crafting_dpo_model --recursive
+
+  sleep 100000
