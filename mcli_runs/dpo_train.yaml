@@ -2,7 +2,7 @@ name: dpo-multi-node-train
 image: mosaicml/llm-foundry:2.5.1_cu124-latest
 compute:
     gpus: 16
-    cluster: r15z1p1
+    cluster: r15z10p1
 scheduling:
   priority: lowest
   resumable: true
